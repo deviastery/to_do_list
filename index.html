@@ -10,11 +10,15 @@
     <div class="main_box">
         <div class="date_box">
             <button id="decrement_btn"></button>
+            <div id="week_day"></div>
             <input type="date" name="" id="date_selector" value="2023-01-01">
             <button id="increment_btn"></button>
         </div>
         <hr id="main_lain">
-        <div id="list"></div>
+        <div id="list">
+            <p id="tasks"></p>
+            <input type="text" name="" id="add_task_input">
+        </div>
         <button id="add_btn">Add task</button>
     </div> 
 </body>
@@ -31,7 +35,7 @@
         width: 500px;
         background-color: rgb(118, 136, 237);
         color: #000;
-        font-size: 30px;
+        font-size: 20px;
         font-family: Arial, Helvetica, sans-serif;
         margin: 30px auto;
         text-align: center;
@@ -45,31 +49,60 @@
     #decrement_btn {
         height: 35px;
         width: 35px; 
-        background-color: rgb(249, 249, 249);
+        background-color: rgb(255, 255, 255);
         background-image: url("img/arrow_left.png");
         background-position: center;
         background-size: contain;
+        margin-right: 20px;
     }
     #increment_btn {
         height: 35px;
         width: 35px;
-        background-color: rgb(249, 249, 249);
+        background-color: rgb(255, 255, 255);
         background-image: url("img/arrow_right.png");
         background-position: center;
         background-size: contain;
+        margin-left: 20px;
+    }
+    #week_day {
+        height: 32px;
+        width: 45px;
+        background-color: rgb(234, 175, 94);
+        margin-right: 5px;
+        border: 1px solid rgb(0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        box-sizing: border-box;
     }
     #date_selector {
         height: 31px;
-        width: 150px;
-        margin-right: 20px;
-        margin-left: 20px;
-        background-color: rgb(249, 249, 249);
+        width: 110px;
+        background-color: rgb(255, 255, 255);
     }
     #list {
-        height: 470px;
-        width: 400px;
-        background-color: rgb(249, 249, 249);
+        height: 440px;
+        width: 390px;
+        background-color: rgb(255, 255, 255);
         margin: 20px auto 0;
+        border: 15px solid rgb(234, 175, 94);
+    }
+    #tasks {
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-top: 10px;
+        background-color: #ffffff;
+    }
+    #add_task_input {
+        width: 350px;
+        height: 24px;
+        margin-top: 10px;
+        background-color: #ffffff;
+        border: 1px solid rgb(0, 0, 0);
+        visibility: hidden;
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
     }
     #add_btn {
         margin-top: 15px;
@@ -80,11 +113,50 @@
 </style>
 
 <script>
+    const dayMilliseconds = 24*60*60*1000
+    
     function setDate(date) {
-        return '' + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay()
+        let formatDate = date.toISOString().slice(0, 10);
+        document.getElementById('date_selector').value = formatDate;
     }
-    let todayDate = new Date();
-    let formatDate = setDate(todayDate);
-    document.getElementById('date_selector').value = formatDate;
-    console.log(todayDate.toString('YYYY-MM-DD')) 
+    function setDay(date) {
+        let formatDay = date.toString().slice(0, 3);
+        document.getElementById('week_day').textContent = formatDay;
+    }
+
+    let currentDate = new Date();
+    setDate(currentDate);
+    setDay(currentDate);
+
+    document.getElementById('decrement_btn').addEventListener('click', function() {
+        currentDate.setTime(currentDate.getTime() - dayMilliseconds);
+        setDate(currentDate);
+        setDay(currentDate);
+    })
+    document.getElementById('increment_btn').addEventListener('click', function() {
+        currentDate.setTime(currentDate.getTime() + dayMilliseconds);
+        setDate(currentDate);
+        setDay(currentDate);
+    })
+    document.getElementById('date_selector').addEventListener('change', function() {
+        let year = document.getElementById('date_selector').value.slice(0,4);
+        let month = document.getElementById('date_selector').value.slice(5,7);
+        let day = document.getElementById('date_selector').value.slice(8,10);
+        currentDate = new Date(year, month, day)
+        setDay(currentDate);
+    })
+    document.getElementById('add_btn').addEventListener('click', function() {
+        document.getElementById('add_task_input').style.visibility = 'visible';
+    })
+    document.getElementById('add_task_input').addEventListener('focus', function() {
+        document.addEventListener('keyup', function(e) {
+            if (e.code === 'Enter') {
+                let newTask = document.getElementById('add_task_input').value;
+                document.getElementById('list').innerHTML += `${newTask}`;
+                document.getElementById('add_task_input').style.visibility = 'hidden';
+            }
+    })
+    })
+
+    //console.log(document.getElementById('week_day').value) 
 </script>
