@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do</title>
+</head>
+<body>
+    
+    <div class="main_box">
+        <div class="date_box">
+            <button id="decrement_btn"></button>
+            <input type="date" name="" id="date_selector" value="2023-01-01">
+            <button id="increment_btn"></button>
+        </div>
+        <hr id="main_lain">
+        <div id="list"></div>
+        <button id="add_btn">Add task</button>
+    </div> 
+</body>
+</html>
+
+<style>
+    * {
+        background-color: rgb(171, 195, 215);
+        padding: 0;
+        margin: 0;
+    }
+    .main_box {
+        height: 650px;
+        width: 500px;
+        background-color: rgb(118, 136, 237);
+        color: #000;
+        font-size: 30px;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 30px auto;
+        text-align: center;
+    }
+    .date_box {
+        background-color: rgb(118, 136, 237);
+        display: inline-flex;
+        justify-content: center;
+        padding: 20px 0 20px;
+    }
+    #decrement_btn {
+        height: 35px;
+        width: 35px; 
+        background-color: rgb(249, 249, 249);
+        background-image: url("img/arrow_left.png");
+        background-position: center;
+        background-size: contain;
+    }
+    #increment_btn {
+        height: 35px;
+        width: 35px;
+        background-color: rgb(249, 249, 249);
+        background-image: url("img/arrow_right.png");
+        background-position: center;
+        background-size: contain;
+    }
+    #date_selector {
+        height: 31px;
+        width: 150px;
+        margin-right: 20px;
+        margin-left: 20px;
+        background-color: rgb(249, 249, 249);
+    }
+    #list {
+        height: 470px;
+        width: 400px;
+        background-color: rgb(249, 249, 249);
+        margin: 20px auto 0;
+    }
+    #add_btn {
+        margin-top: 15px;
+        height: 50px;
+        width: 150px;
+        background-color: rgb(255, 255, 255);
+    }
+</style>
+
+<script>
+    function setDate(date) {
+        return '' + date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay()
+    }
+    let todayDate = new Date();
+    let formatDate = setDate(todayDate);
+    document.getElementById('date_selector').value = formatDate;
+    console.log(todayDate.toString('YYYY-MM-DD')) 
+</script>
