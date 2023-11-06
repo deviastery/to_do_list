@@ -156,7 +156,7 @@
         setDay();
     })
     document.getElementById('add_btn').addEventListener('click', function(event) {
-        let taskInput = taskInput;
+        let taskInput = document.getElementById('add_task_input');
         taskInput.style.visibility = 'visible';
         taskInput.focus();
 
@@ -172,16 +172,13 @@
                 li.innerHTML = newTask;
                 let input = document.createElement("input");
                 input.setAttribute('type', 'checkbox');
-                input.setAttribute('id', `cbox_${taskList.length}`);
                 li.append(input);
                 
                 document.getElementById('list').append(li);
 
-                let checkbox = document.getElementById(`cbox_${taskList.length}`);
-                
-                checkbox.addEventListener('change', function() {
-                    let parentId = checkbox.parentElement.getAttribute('id');
-                    if (checkbox.checked) {
+                input.addEventListener('change', function() {
+                    let parentId = input.parentElement.getAttribute('id');
+                    if (input.checked) {
                         document.getElementById(parentId).style.textDecoration = 'line-through';
                     } else {
                         document.getElementById(parentId).style.textDecoration = 'none';
