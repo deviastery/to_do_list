@@ -156,16 +156,16 @@
         setDay();
     })
     document.getElementById('add_btn').addEventListener('click', function(event) {
-        document.getElementById('add_task_input').style.visibility = 'visible';
-        document.getElementById('add_task_input').focus();
+        let taskInput = taskInput;
+        taskInput.style.visibility = 'visible';
+        taskInput.focus();
 
         document.addEventListener('keyup', function(e) {
-            if ((e.code === 'Enter') && (document.getElementById('add_task_input').value !== '')) {
-
-                let newTask = document.getElementById('add_task_input').value;
+            if ((e.code === 'Enter') && (taskInput.value !== '')) {
+                let newTask = taskInput.value;
                 taskList.push(newTask);
-                document.getElementById('add_task_input').value = '';
-                document.getElementById('add_task_input').style.visibility = 'hidden';
+                taskInput.value = '';
+                taskInput.style.visibility = 'hidden';
                 
                 let li = document.createElement("li");
                 li.setAttribute('id', `task_${taskList.length}`);
