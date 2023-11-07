@@ -14,11 +14,14 @@
             <input type="date" name="" id="date_selector" value="2023-01-01">
             <button id="increment_btn"></button>
         </div>
+        
         <hr id="main_line">
+
         <div id="list_area">
-            <input type="text" name="" id="add_task_input">
             <ul id="list"></ul>
+            <input type="text" name="" id="add_task_input">
         </div>
+
         <button id="add_btn">Add task</button>
     </div> 
 </body>
@@ -41,7 +44,7 @@
         text-align: center;
     }
     .date_box {
-        background-color: rgb(118, 136, 237);
+        background-color: inherit;
         display: inline-flex;
         justify-content: center;
         padding: 20px 0 20px;
@@ -89,26 +92,20 @@
         border: 15px solid rgb(234, 175, 94);
     }
     #list {
-        height: 380px;
+
         width: 390px;
-        background-color: rgb(255, 255, 255);
-        margin: 20px auto 0;
+        background-color: inherit;
+        margin: 10px auto 0;
     }
     li {
-        background-color: rgb(255, 255, 255);
+        background-color: inherit;
         list-style-type: none;
-    }
-    #tasks {
-        font-size: 20px;
-        font-family: Arial, Helvetica, sans-serif;
-        margin-top: 10px;
-        background-color: #ffffff;
     }
     #add_task_input {
         width: 350px;
         height: 24px;
-        margin-top: 10px;
-        background-color: #ffffff;
+        margin-top: 0px;
+        background-color: inherit;
         border: 1px solid rgb(0, 0, 0);
         visibility: hidden;
         font-size: 20px;
@@ -123,8 +120,6 @@
 </style>
 
 <script>
-    const dayMilliseconds = 24*60*60*1000
-    
     function setDate() {
         let formatDate = currentDate.toISOString().slice(0, 10);
         document.getElementById('date_selector').value = formatDate;
@@ -144,11 +139,11 @@
     let taskList = [];
 
     document.getElementById('decrement_btn').addEventListener('click', function() {
-        currentDate.setTime(currentDate.getTime() - dayMilliseconds);
+        currentDate.setDate(currentDate.getDate() - 1);
         update()
     })
     document.getElementById('increment_btn').addEventListener('click', function() {
-        currentDate.setTime(currentDate.getTime() + dayMilliseconds);
+        currentDate.setDate(currentDate.getDate() + 1);
         update()
     })
     document.getElementById('date_selector').addEventListener('change', function() {
@@ -187,9 +182,4 @@
             }
         })
     })
-    
-        
-    
-
-
 </script>
