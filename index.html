@@ -89,26 +89,28 @@
         width: 390px;
         background-color: rgb(255, 255, 255);
         margin: 20px auto 0;
-        border: 15px solid rgb(234, 175, 94);
+        border: 15px solid rgb(234, 175, 94);  
+        display: flex;
+        flex-direction: column;
     }
     #list {
         max-height: 420px;
-        width: 370px;
+        width: 360px;
         background-color: inherit;
         margin: 10px 0 0 20px;
         overflow-y: auto;
-        display: flex;
-        flex-direction: column;
     }
     li {
         background-color: inherit;
         list-style-type: none;
         text-align: left;
+        display: flex;
+        justify-content: space-between;
     }
     #add_task_input {
         width: 350px;
         height: 24px;
-        margin-top: 0px;
+        margin: 0 auto 10px;
         background-color: inherit;
         border: 1px solid rgb(0, 0, 0);
         visibility: hidden;
@@ -192,6 +194,8 @@
         taskInput.style.height = '24px';
         taskInput.focus();
 
+        document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
+
         document.addEventListener('keyup', function(e) {
             if ((e.code === 'Enter') && (taskInput.value !== '')) {
                 taskInput.style.height = '0px';
@@ -199,11 +203,14 @@
                 taskInput.value = '';
                 taskInput.style.visibility = 'hidden';
 
+                if (task.length > 70) {
+                    alert("The task is too long");
+                    return;
+                } 
+
                 taskList.push(task);
 
                 createLi(taskList.length, task);
-
-                document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
 
                 changeCheckboxListener(taskList.length);
             }
