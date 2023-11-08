@@ -92,14 +92,18 @@
         border: 15px solid rgb(234, 175, 94);
     }
     #list {
-
-        width: 390px;
+        max-height: 400px;
+        width: 370px;
         background-color: inherit;
-        margin: 10px auto 0;
+        margin: 10px 0 0 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
     }
     li {
         background-color: inherit;
         list-style-type: none;
+        text-align: left;
     }
     #add_task_input {
         width: 350px;
@@ -136,7 +140,8 @@
 
     let currentDate = new Date();
     update();
-    let taskList = [];
+    let taskList = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,];
+
 
     document.getElementById('decrement_btn').addEventListener('click', function() {
         currentDate.setDate(currentDate.getDate() - 1);
@@ -150,26 +155,38 @@
         currentDate = new Date(document.getElementById('date_selector').value);
         setDay();
     })
+    function createLi(iterator, task) {
+        let li = document.createElement("li");
+        li.setAttribute('id', `task_${iterator}`);
+        li.innerHTML = task;
+        let input = document.createElement("input");
+        input.setAttribute('type', 'checkbox');
+        li.append(input);
+        
+        document.getElementById('list').append(li);
+    }
+    if (taskList) {
+        for(let task of taskList) 
+            createLi(taskList.indexOf(task), task);
+    }
     document.getElementById('add_btn').addEventListener('click', function(event) {
         let taskInput = document.getElementById('add_task_input');
         taskInput.style.visibility = 'visible';
+        taskInput.style.height = '24px';
         taskInput.focus();
 
         document.addEventListener('keyup', function(e) {
             if ((e.code === 'Enter') && (taskInput.value !== '')) {
-                let newTask = taskInput.value;
-                taskList.push(newTask);
+                taskInput.style.height = '0px';
+                let task = taskInput.value;
                 taskInput.value = '';
                 taskInput.style.visibility = 'hidden';
-                
-                let li = document.createElement("li");
-                li.setAttribute('id', `task_${taskList.length}`);
-                li.innerHTML = newTask;
-                let input = document.createElement("input");
-                input.setAttribute('type', 'checkbox');
-                li.append(input);
-                
-                document.getElementById('list').append(li);
+
+                taskList.push(task);
+
+                createLi(taskList.length, task);
+
+                document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight)
 
                 input.addEventListener('change', function() {
                     let parentId = input.parentElement.getAttribute('id');
