@@ -97,7 +97,7 @@
         max-height: 420px;
         width: 360px;
         background-color: inherit;
-        margin: 10px 0 0 20px;
+        margin: 10px 0 -1px 20px;
         overflow-y: auto;
     }
     li {
@@ -106,6 +106,8 @@
         text-align: left;
         display: flex;
         justify-content: space-between;
+        margin: 0;
+        padding: 0;
     }
     #add_task_input {
         width: 350px;
@@ -142,7 +144,7 @@
 
     let currentDate = new Date();
     update();
-    let taskList = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,];
+    let taskList = [1,1,1,1,1,1,1,1,1,1,1,1,];
 
 
     document.getElementById('decrement_btn').addEventListener('click', function() {
