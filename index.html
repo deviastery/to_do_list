@@ -92,7 +92,7 @@
         border: 15px solid rgb(234, 175, 94);
     }
     #list {
-        max-height: 400px;
+        max-height: 420px;
         width: 370px;
         background-color: inherit;
         margin: 10px 0 0 20px;
@@ -161,13 +161,30 @@
         li.innerHTML = task;
         let input = document.createElement("input");
         input.setAttribute('type', 'checkbox');
+        input.setAttribute('id', `cbox_${iterator}`); 
         li.append(input);
         
         document.getElementById('list').append(li);
     }
+    function changeCheckboxListener(iterator) {
+        let checkbox = document.getElementById(`cbox_${iterator}`); 
+
+        checkbox.addEventListener('change', function() { 
+            let parentId = checkbox.parentElement.getAttribute('id'); 
+            if (checkbox.checked) { 
+                document.getElementById(parentId).style.textDecoration = 'line-through';
+            } else {
+                document.getElementById(parentId).style.textDecoration = 'none';
+            }
+        });
+    }
     if (taskList) {
-        for(let task of taskList) 
-            createLi(taskList.indexOf(task), task);
+        let index = 0;
+        for(let task of taskList) {
+            ++index;
+            createLi(index, task);
+            changeCheckboxListener(index);
+        }
     }
     document.getElementById('add_btn').addEventListener('click', function(event) {
         let taskInput = document.getElementById('add_task_input');
@@ -186,16 +203,9 @@
 
                 createLi(taskList.length, task);
 
-                document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight)
+                document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
 
-                input.addEventListener('change', function() {
-                    let parentId = input.parentElement.getAttribute('id');
-                    if (input.checked) {
-                        document.getElementById(parentId).style.textDecoration = 'line-through';
-                    } else {
-                        document.getElementById(parentId).style.textDecoration = 'none';
-                    }
-            });
+                changeCheckboxListener(taskList.length);
             }
         })
     })
