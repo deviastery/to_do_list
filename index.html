@@ -40,7 +40,7 @@
         color: #000;
         font-size: 20px;
         font-family: Arial, Helvetica, sans-serif;
-        margin: 30px auto;
+        margin: 45px auto;
         text-align: center;
     }
     .date_box {
@@ -128,10 +128,29 @@
 </style>
 
 <script>
+
+    let currentDate = new Date();
+    let tasks = {};
+    let taskList = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,];
+    init();
+
+    function init() {
+        if (!taskList)
+            return
+
+        // заполнение списка
+        for(let [index, task] in taskList) 
+            createLi(index, task);
+
+        update();
+
+    } // init
+
     function setDate() {
         let formatDate = currentDate.toISOString().slice(0, 10);
         document.getElementById('date_selector').value = formatDate;
     }
+
     function setDay() {
         let formatDay = currentDate.toString().slice(0, 3);
         document.getElementById('week_day').textContent = formatDay;
@@ -142,23 +161,22 @@
         setDay();
     }
 
-    let currentDate = new Date();
-    update();
-    let taskList = [1,1,1,1,1,1,1,1,1,1,1,1,];
-
-
     document.getElementById('decrement_btn').addEventListener('click', function() {
         currentDate.setDate(currentDate.getDate() - 1);
-        update()
+        update();
     })
+    
     document.getElementById('increment_btn').addEventListener('click', function() {
         currentDate.setDate(currentDate.getDate() + 1);
-        update()
+        update();
     })
+    
     document.getElementById('date_selector').addEventListener('change', function() {
         currentDate = new Date(document.getElementById('date_selector').value);
         setDay();
     })
+    
+    
     function createLi(iterator, task) {
         let li = document.createElement("li");
         li.setAttribute('id', `task_${iterator}`);
@@ -167,30 +185,23 @@
         input.setAttribute('type', 'checkbox');
         input.setAttribute('id', `cbox_${iterator}`); 
         li.append(input);
-        
         document.getElementById('list').append(li);
+        changeCheckboxListener(iterator);
     }
+
+
     function changeCheckboxListener(iterator) {
         let checkbox = document.getElementById(`cbox_${iterator}`); 
 
         checkbox.addEventListener('change', function() { 
             let parentId = checkbox.parentElement.getAttribute('id'); 
-            if (checkbox.checked) { 
-                document.getElementById(parentId).style.textDecoration = 'line-through';
-            } else {
-                document.getElementById(parentId).style.textDecoration = 'none';
-            }
+            document.getElementById(parentId).style.textDecoration = checkbox.checked ? 'line-through' : 'none';
         });
     }
-    if (taskList) {
-        let index = 0;
-        for(let task of taskList) {
-            ++index;
-            createLi(index, task);
-            changeCheckboxListener(index);
-        }
-    }
+
+
     document.getElementById('add_btn').addEventListener('click', function(event) {
+        
         let taskInput = document.getElementById('add_task_input');
         taskInput.style.visibility = 'visible';
         taskInput.style.height = '24px';
@@ -208,14 +219,15 @@
                 if (task.length > 70) {
                     alert("The task is too long");
                     return;
-                } 
-
+                }
+                 
                 taskList.push(task);
 
                 createLi(taskList.length, task);
-
-                changeCheckboxListener(taskList.length);
             }
         })
-    })
+
+    }) // add EventListener
+
+
 </script>
