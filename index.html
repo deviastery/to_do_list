@@ -95,10 +95,11 @@
     }
     #list {
         max-height: 420px;
-        width: 360px;
+        max-width: 360px;
         background-color: inherit;
         margin: 10px 0 -1px 20px;
         overflow-y: auto;
+        overflow-x: hidden;
     }
     li {
         background-color: inherit;
@@ -106,8 +107,12 @@
         text-align: left;
         display: flex;
         justify-content: space-between;
-        margin: 0;
-        padding: 0;
+        width: 360px;
+        word-wrap: break-word;
+    }
+    label {
+        background-color: inherit;
+        width: 330px;
     }
     #add_task_input {
         width: 350px;
@@ -132,6 +137,7 @@
     let currentDate = new Date();
     let tasks = {};
     let taskList = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,];
+    let index = 0;
     init();
 
     function init() {
@@ -139,8 +145,8 @@
             return
 
         // заполнение списка
-        for(let [index, task] in taskList) 
-            createLi(index, task);
+        for(let list of taskList) 
+            createLiElement(list);
 
         update();
 
@@ -177,21 +183,24 @@
     })
     
     
-    function createLi(iterator, task) {
+    function createLiElement(task) {
+        index++;
         let li = document.createElement("li");
-        li.setAttribute('id', `task_${iterator}`);
-        li.innerHTML = task;
+        li.setAttribute('id', `task_${index}`);
+        let label = document.createElement("label");
+        label.innerHTML = task;
         let input = document.createElement("input");
         input.setAttribute('type', 'checkbox');
-        input.setAttribute('id', `cbox_${iterator}`); 
+        input.setAttribute('id', `cbox_${index}`); 
+        li.append(label);
         li.append(input);
         document.getElementById('list').append(li);
-        changeCheckboxListener(iterator);
+        changeCheckboxListener(index);
     }
 
 
-    function changeCheckboxListener(iterator) {
-        let checkbox = document.getElementById(`cbox_${iterator}`); 
+    function changeCheckboxListener(index) {
+        let checkbox = document.getElementById(`cbox_${index}`); 
 
         checkbox.addEventListener('change', function() { 
             let parentId = checkbox.parentElement.getAttribute('id'); 
@@ -223,7 +232,7 @@
                  
                 taskList.push(task);
 
-                createLi(taskList.length, task);
+                createLiElement(task);
             }
         })
 
