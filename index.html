@@ -22,7 +22,7 @@
             <input type="text" name="" id="add_task_input">
         </div>
 
-        <button id="add_btn">Add task</button>
+        <button id="add_btn" title="To save the task press Enter">Add task</button>
     </div> 
 </body>
 </html>
@@ -178,13 +178,29 @@
         setDay();
     }
 
+    function clearData() {
+        dayTaskesAndCheckboxes = [];
+        index = 0;
+        document.querySelectorAll('li').forEach(elem => elem.remove());
+    }
+
+    function showElement(elem) {
+        elem.style.visibility = 'visible';
+        elem.style.height = '24px';
+        elem.focus();
+    }
+
+    function hideElement(elem) {
+        elem.style.visibility = 'hidden';
+        elem.style.height = '0px';
+        elem.value = '';
+    }
+
+
     document.getElementById('decrement_btn').addEventListener('click', function() {
         allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-        dayTaskesAndCheckboxes = [];
-        index = 0;
-
-        document.querySelectorAll('li').forEach(elem => elem.remove());
+        clearData();
 
         currentDate.setDate(currentDate.getDate() - 1);
         
@@ -194,10 +210,7 @@
     document.getElementById('increment_btn').addEventListener('click', function() {
         allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-        dayTaskesAndCheckboxes = [];
-        index = 0;
-
-        document.querySelectorAll('li').forEach(elem => elem.remove());
+        clearData();
 
         currentDate.setDate(currentDate.getDate() + 1);
         
@@ -207,10 +220,7 @@
     document.getElementById('date_selector').addEventListener('change', function() {
         allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-        dayTaskesAndCheckboxes = [];
-        index = 0;
-
-        document.querySelectorAll('li').forEach(elem => elem.remove());
+        clearData();
 
         currentDate = new Date(document.getElementById('date_selector').value);
         
@@ -222,6 +232,7 @@
         let task = wholeTask.task;
         let checkbox = wholeTask.checked;
         index++;
+
         let li = document.createElement("li");
         li.setAttribute('id', `task_${index}`);
         let label = document.createElement("label");
@@ -235,7 +246,9 @@
         }
         li.append(label); 
         li.append(input);
+
         document.getElementById('list').append(li);
+
         changeCheckboxListener(index);
     }
 
@@ -252,28 +265,28 @@
 
             label.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
             task.checked = checkbox.checked;
-            
         });
     }
 
 
-    document.getElementById('add_btn').addEventListener('click', function(event) {
-
-        
+    document.getElementById('add_btn').addEventListener('click', function() {        
         let taskInput = document.getElementById('add_task_input');
-        taskInput.style.visibility = 'visible';
-        taskInput.style.height = '24px';
-        taskInput.focus();
+        showElement(taskInput);
 
         document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
 
         document.addEventListener('keyup', function(e) {
-            if ((e.code === 'Enter') && (taskInput.value !== '')) {
-                taskInput.style.height = '0px';
-                let task = taskInput.value;
-                taskInput.value = '';
-                taskInput.style.visibility = 'hidden';
+            if (e.code === 'Enter') {
+                let task = taskInput.value.trim();
 
+                if (!task){
+                    alert("The empty task");
+                    taskInput.value = '';
+                    console.log("The empty task")
+                    return
+                }
+
+                hideElement(taskInput);
 
                 taskAndCheckbox = {"task": task,
                                    "checked": false};
@@ -286,6 +299,19 @@
                 }
 
                 createLiElement(taskAndCheckbox);
+            }
+        })
+        
+        document.addEventListener('click', function(e) {
+            let inputBoundaries = e.composedPath().includes(taskInput);
+            let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
+
+            if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
+                hideElement(taskInput);
+            } else if (taskInput.value.trim()){
+                alert("You don't save the task");
+                console.log("You don't save the task")
+                e.stopPropagation();
             }
         })
 
