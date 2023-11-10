@@ -11,7 +11,7 @@
         <div class="date_box">
             <button id="decrement_btn"></button>
             <div id="week_day"></div>
-            <input type="date" name="" id="date_selector" value="2023-01-01">
+            <input type="date" name="" id="date_selector">
             <button id="increment_btn"></button>
         </div>
         
@@ -135,31 +135,42 @@
 <script>
 
     let currentDate = new Date();
-    let tasks = {};
-    let taskList = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,];
+    let allTasks = new Map;
+    let dayTaskesAndCheckboxes = [];
+    let taskAndCheckbox;
+    let dateValue;
     let index = 0;
     init();
 
     function init() {
-        if (!taskList)
+        update();
+
+        if (!allTasks.has(dateValue)) 
             return
 
-        // заполнение списка
-        for(let list of taskList) 
-            createLiElement(list);
+        let taskList = [];
+        let checkboxesList = [];
 
-        update();
+        dayTaskesAndCheckboxes = allTasks.get(dateValue);
+
+        // заполнение списка
+        for(let task of dayTaskesAndCheckboxes) 
+            createLiElement(task);
+
 
     } // init
 
     function setDate() {
         let formatDate = currentDate.toISOString().slice(0, 10);
         document.getElementById('date_selector').value = formatDate;
+
+        dateValue = formatDate;
     }
 
     function setDay() {
         let formatDay = currentDate.toString().slice(0, 3);
         document.getElementById('week_day').textContent = formatDay;
+
     }
 
     function update() {
@@ -168,22 +179,48 @@
     }
 
     document.getElementById('decrement_btn').addEventListener('click', function() {
+        allTasks.set(dateValue, dayTaskesAndCheckboxes);
+
+        dayTaskesAndCheckboxes = [];
+        index = 0;
+
+        document.querySelectorAll('li').forEach(elem => elem.remove());
+
         currentDate.setDate(currentDate.getDate() - 1);
-        update();
+        
+        init();
     })
     
     document.getElementById('increment_btn').addEventListener('click', function() {
+        allTasks.set(dateValue, dayTaskesAndCheckboxes);
+
+        dayTaskesAndCheckboxes = [];
+        index = 0;
+
+        document.querySelectorAll('li').forEach(elem => elem.remove());
+
         currentDate.setDate(currentDate.getDate() + 1);
-        update();
+        
+        init();
     })
     
     document.getElementById('date_selector').addEventListener('change', function() {
+        allTasks.set(dateValue, dayTaskesAndCheckboxes);
+
+        dayTaskesAndCheckboxes = [];
+        index = 0;
+
+        document.querySelectorAll('li').forEach(elem => elem.remove());
+
         currentDate = new Date(document.getElementById('date_selector').value);
-        setDay();
+        
+        init();
     })
     
     
-    function createLiElement(task) {
+    function createLiElement(wholeTask) {
+        let task = wholeTask.task;
+        let checkbox = wholeTask.checked;
         index++;
         let li = document.createElement("li");
         li.setAttribute('id', `task_${index}`);
@@ -192,7 +229,11 @@
         let input = document.createElement("input");
         input.setAttribute('type', 'checkbox');
         input.setAttribute('id', `cbox_${index}`); 
-        li.append(label);
+        if (wholeTask.checked) {
+            input.setAttribute('checked', 'true');
+            label.style.textDecoration = 'line-through';
+        }
+        li.append(label); 
         li.append(input);
         document.getElementById('list').append(li);
         changeCheckboxListener(index);
@@ -203,13 +244,21 @@
         let checkbox = document.getElementById(`cbox_${index}`); 
 
         checkbox.addEventListener('change', function() { 
-            let parentId = checkbox.parentElement.getAttribute('id'); 
-            document.getElementById(parentId).style.textDecoration = checkbox.checked ? 'line-through' : 'none';
+            let parentId = checkbox.parentElement.getAttribute('id');
+            let liElement = document.getElementById(parentId);
+            let label = liElement.querySelector('label');
+            let taskText = label.textContent;
+            let task = (dayTaskesAndCheckboxes).find(wholeTask => wholeTask.task === taskText);
+
+            label.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
+            task.checked = checkbox.checked;
+            
         });
     }
 
 
     document.getElementById('add_btn').addEventListener('click', function(event) {
+
         
         let taskInput = document.getElementById('add_task_input');
         taskInput.style.visibility = 'visible';
@@ -225,14 +274,18 @@
                 taskInput.value = '';
                 taskInput.style.visibility = 'hidden';
 
+
+                taskAndCheckbox = {"task": task,
+                                   "checked": false};
+
+                dayTaskesAndCheckboxes.push(taskAndCheckbox);
+
                 if (task.length > 70) {
                     alert("The task is too long");
                     return;
                 }
-                 
-                taskList.push(task);
 
-                createLiElement(task);
+                createLiElement(taskAndCheckbox);
             }
         })
 
