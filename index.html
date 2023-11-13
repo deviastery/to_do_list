@@ -268,22 +268,25 @@
         });
     }
 
-
+let i = 0;
     document.getElementById('add_btn').addEventListener('click', function() {        
         let taskInput = document.getElementById('add_task_input');
         showElement(taskInput);
 
         document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
 
-        document.addEventListener('keyup', function(e) {
+        document.getElementById('list').addEventListener('keyup', function(e) {
             if (e.code === 'Enter') {
+                console.log("iteration:", ++i)
+                let taskInput = document.getElementById('add_task_input');
                 let task = taskInput.value.trim();
-
+                console.log("task is", task)
                 if (!task){
+                    ///////////////////
                     alert("The empty task");
-                    taskInput.value = '';
                     console.log("The empty task")
-                    return
+                    taskInput.value = '';
+                    return;
                 }
 
                 hideElement(taskInput);
@@ -294,6 +297,7 @@
                 dayTaskesAndCheckboxes.push(taskAndCheckbox);
 
                 if (task.length > 70) {
+                    ////////////////////////////
                     alert("The task is too long");
                     return;
                 }
@@ -301,17 +305,23 @@
                 createLiElement(taskAndCheckbox);
             }
         })
-        
+
+        var windowShowed = false
         document.addEventListener('click', function(e) {
+if (windowShowed)
+            return
+
             let inputBoundaries = e.composedPath().includes(taskInput);
             let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
 
             if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
                 hideElement(taskInput);
-            } else if (taskInput.value.trim()){
-                alert("You don't save the task");
+            } else if ((taskInput.value.trim()) && ((!inputBoundaries))){
+                //////////////////
+                windowShowed = true
+                window.confirm("You don't save the task")
+                windowShowed = false
                 console.log("You don't save the task")
-                e.stopPropagation();
             }
         })
 
