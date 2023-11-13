@@ -268,19 +268,21 @@
         });
     }
 
-let i = 0;
+
     document.getElementById('add_btn').addEventListener('click', function() {        
         let taskInput = document.getElementById('add_task_input');
         showElement(taskInput);
 
         document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
 
-        document.getElementById('list').addEventListener('keyup', function(e) {
-            if (e.code === 'Enter') {
-                console.log("iteration:", ++i)
-                let taskInput = document.getElementById('add_task_input');
+    }) // add EventListener
+
+    document.addEventListener('keyup', function(e) {
+        let taskInput = document.getElementById('add_task_input');
+            if ((e.code === 'Enter') && (taskInput.style.visibility = 'visible')) {
+                
                 let task = taskInput.value.trim();
-                console.log("task is", task)
+
                 if (!task){
                     ///////////////////
                     alert("The empty task");
@@ -306,26 +308,20 @@ let i = 0;
             }
         })
 
-        var windowShowed = false
         document.addEventListener('click', function(e) {
-if (windowShowed)
-            return
+            let taskInput = document.getElementById('add_task_input');
+            if (taskInput.style.visibility = 'visible') {
 
-            let inputBoundaries = e.composedPath().includes(taskInput);
-            let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
+                let inputBoundaries = e.composedPath().includes(taskInput);
+                let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
 
-            if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
-                hideElement(taskInput);
-            } else if ((taskInput.value.trim()) && ((!inputBoundaries))){
-                //////////////////
-                windowShowed = true
-                window.confirm("You don't save the task")
-                windowShowed = false
-                console.log("You don't save the task")
+                if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
+                    hideElement(taskInput);
+                } else if ((taskInput.value.trim()) && (!inputBoundaries)){
+                    //////////////////
+                    alert("You don't save the task");
+                    console.log("You don't save the task")
+                }
             }
         })
-
-    }) // add EventListener
-
-
 </script>
