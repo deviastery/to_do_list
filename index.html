@@ -135,10 +135,8 @@
 <script>
 
     let currentDate = new Date();
-    //let allTasks = new Map();
     let dayTaskesAndCheckboxes = [];
     let taskAndCheckbox;
-    let dateValue;
     let formatDate;
     let index = 0;
     init();
@@ -146,23 +144,15 @@
     function init() {
         update();
 
-        //if (!allTasks.has(dateValue)) 
-        //    return
-
-        //dayTaskesAndCheckboxes = allTasks.get(dateValue);
-
-        // заполнение списка
         for(let task of dayTaskesAndCheckboxes) 
             createLiElement(task);
-
 
     } // init
 
     function setDate() {
-        let formatDate = currentDate.toISOString().slice(0, 10);
+        formatDate = currentDate.toISOString().slice(0, 10);
         document.getElementById('date_selector').value = formatDate;
 
-        dateValue = formatDate;
     }
 
     function setDay() {
@@ -172,16 +162,8 @@
     }
 
     function getFromLocalStorage() {
-        if (localStorage.getItem(`${dateValue}`)) {
-            console.log('tasks is got');
-            dayTaskesAndCheckboxes = JSON.parse(localStorage.getItem(`${dateValue}`));
-            
-        } else {
-            console.log('tasks is not got');
-            console.log(localStorage.getItem(`${dateValue}`));
-            console.log(localStorage.getItem(`Mon Nov 13 2023 22:14:41 GMT+0300 (Москва, стандартное время)`));
-            console.log(`Wed Nov 15 2023 22:14:41 GMT+0300 (Москва, стандартное время)`);
-            console.log(`${dateValue}`);
+        if (localStorage.getItem(`${formatDate}`)) {
+            dayTaskesAndCheckboxes = JSON.parse(localStorage.getItem(`${formatDate}`));
         }
     }
  
@@ -209,78 +191,52 @@
         elem.value = '';
     }
 
+    function recordLocalStorage() {
+        if (localStorage.getItem(`${formatDate}`)) {
+            localStorage.removeItem(`${formatDate}`)
+        }
+        localStorage.setItem(`${formatDate}`, JSON.stringify(dayTaskesAndCheckboxes));
+    }
+
 
     document.getElementById('decrement_btn').addEventListener('click', function() {
-        console.log('before all', currentDate)
         let taskInput = document.getElementById('add_task_input');
         if (window.getComputedStyle(taskInput).visibility === 'hidden') {
-            //allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-            if (localStorage.getItem(`${dateValue}`)) {
-                localStorage.removeItem(`${dateValue}`)
-            }
-            localStorage.setItem(`${dateValue}`, JSON.stringify(dayTaskesAndCheckboxes));
-            console.log('tasks is put');
+            recordLocalStorage();
 
             clearData();
-
-            console.log('before init', dateValue)
 
             currentDate.setDate(currentDate.getDate() - 1);
             
 
             init();
 
-            console.log('after init', dateValue)
-
-        } else {
-            console.log("else is worked")
         }
     })
     
     document.getElementById('increment_btn').addEventListener('click', function() {
-        console.log('before all', dateValue)
         let taskInput = document.getElementById('add_task_input');
         if (window.getComputedStyle(taskInput).visibility === 'hidden') {
-            //allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-            if (localStorage.getItem(`${dateValue}`)) {
-                localStorage.removeItem(`${dateValue}`)
-            }
-            localStorage.setItem(`${dateValue}`, JSON.stringify(dayTaskesAndCheckboxes));
-            console.log('tasks is put');
+            recordLocalStorage();
 
             clearData();
 
-
-            console.log('before init', dateValue)
-
             currentDate.setDate(currentDate.getDate() + 1);
             
-            
-
             init();
 
-            console.log('after init', dateValue)
-        } else {
-            console.log("else is worked")
         }
     })
     
     document.getElementById('date_selector').addEventListener('change', function() {
         let taskInput = document.getElementById('add_task_input');
         if (window.getComputedStyle(taskInput).visibility === 'hidden') {
-            //allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-            if (localStorage.getItem(`${dateValue}`)) {
-                localStorage.removeItem(`${dateValue}`)
-            }
-            localStorage.setItem(`${dateValue}`, JSON.stringify(dayTaskesAndCheckboxes));
-            console.log('tasks is put');
+            recordLocalStorage();
 
             clearData();
-
-            currentDate = new Date(document.getElementById('date_selector').value);
             
             init();
         }
