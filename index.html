@@ -275,15 +275,20 @@
 
         document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
 
-        document.addEventListener('keyup', function(e) {
-            if (e.code === 'Enter') {
+    }) // add EventListener
+
+    document.addEventListener('keyup', function(e) {
+        let taskInput = document.getElementById('add_task_input');
+            if ((e.code === 'Enter') && (taskInput.style.visibility = 'visible')) {
+                
                 let task = taskInput.value.trim();
 
                 if (!task){
+                    ///////////////////
                     alert("The empty task");
-                    taskInput.value = '';
                     console.log("The empty task")
-                    return
+                    taskInput.value = '';
+                    return;
                 }
 
                 hideElement(taskInput);
@@ -294,6 +299,7 @@
                 dayTaskesAndCheckboxes.push(taskAndCheckbox);
 
                 if (task.length > 70) {
+                    ////////////////////////////
                     alert("The task is too long");
                     return;
                 }
@@ -301,21 +307,21 @@
                 createLiElement(taskAndCheckbox);
             }
         })
-        
-        document.addEventListener('click', function(e) {
-            let inputBoundaries = e.composedPath().includes(taskInput);
-            let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
 
-            if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
-                hideElement(taskInput);
-            } else if (taskInput.value.trim()){
-                alert("You don't save the task");
-                console.log("You don't save the task")
-                e.stopPropagation();
+        document.addEventListener('click', function(e) {
+            let taskInput = document.getElementById('add_task_input');
+            if (taskInput.style.visibility = 'visible') {
+
+                let inputBoundaries = e.composedPath().includes(taskInput);
+                let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
+
+                if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
+                    hideElement(taskInput);
+                } else if ((taskInput.value.trim()) && (!inputBoundaries)){
+                    //////////////////
+                    alert("You don't save the task");
+                    console.log("You don't save the task")
+                }
             }
         })
-
-    }) // add EventListener
-
-
 </script>
