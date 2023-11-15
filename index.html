@@ -110,6 +110,9 @@
         width: 360px;
         word-wrap: break-word;
     }
+    li:hover {
+        background-color: rgb(171, 171, 171);
+    }
     label {
         background-color: inherit;
         width: 330px;
@@ -337,4 +340,25 @@
                 }
             }
         })
+
+        window.addEventListener('beforeunload', function (e) {
+            let taskInput = document.getElementById('add_task_input');
+            if (window.getComputedStyle(taskInput).visibility === 'hidden') {
+
+                recordLocalStorage();
+
+                clearData();
+
+                currentDate.setDate(currentDate.getDate() + 1);
+                
+                init();
+
+            } /*else {
+                if (!confirm("You didn't save the task. Are you sure?")) {
+
+                }
+                
+            }*/
+        });
+
 </script>
