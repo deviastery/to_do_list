@@ -253,10 +253,11 @@
     }
 
 
+
     function changeCheckboxListener(index) {
         let checkbox = document.getElementById(`cbox_${index}`); 
 
-        checkbox.addEventListener('change', function() { 
+        checkbox.addEventListener('click', function(e) {
             let parentId = checkbox.parentElement.getAttribute('id');
             let liElement = document.getElementById(parentId);
             let label = liElement.querySelector('label');
@@ -265,6 +266,7 @@
 
             label.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
             task.checked = checkbox.checked;
+            e.stopPropagation();
         });
     }
 
@@ -284,9 +286,7 @@
                 let task = taskInput.value.trim();
 
                 if (!task){
-                    ///////////////////
                     alert("The empty task");
-                    console.log("The empty task")
                     taskInput.value = '';
                     return;
                 }
@@ -299,7 +299,6 @@
                 dayTaskesAndCheckboxes.push(taskAndCheckbox);
 
                 if (task.length > 70) {
-                    ////////////////////////////
                     alert("The task is too long");
                     return;
                 }
@@ -318,9 +317,8 @@
                 if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
                     hideElement(taskInput);
                 } else if ((taskInput.value.trim()) && (!inputBoundaries)){
-                    //////////////////
-                    alert("You don't save the task");
-                    console.log("You don't save the task")
+                    alert("You didn't save the task");
+
                 }
             }
         })
