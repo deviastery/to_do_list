@@ -198,33 +198,43 @@
 
 
     document.getElementById('decrement_btn').addEventListener('click', function() {
-        allTasks.set(dateValue, dayTaskesAndCheckboxes);
+        if (document.getElementById('add_task_input').style.visibility === 'hidden') {
+            allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-        clearData();
+            clearData();
 
-        currentDate.setDate(currentDate.getDate() - 1);
-        
-        init();
+            currentDate.setDate(currentDate.getDate() - 1);
+            
+            init();
+        } else {
+            console.log('else is work')
+        }
     })
     
     document.getElementById('increment_btn').addEventListener('click', function() {
-        allTasks.set(dateValue, dayTaskesAndCheckboxes);
+        if (document.getElementById('add_task_input').style.visibility === 'hidden') {
+            allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-        clearData();
+            clearData();
 
-        currentDate.setDate(currentDate.getDate() + 1);
-        
-        init();
+            currentDate.setDate(currentDate.getDate() + 1);
+            
+            init();
+        } else {
+            console.log('else is work')
+        }
     })
     
     document.getElementById('date_selector').addEventListener('change', function() {
-        allTasks.set(dateValue, dayTaskesAndCheckboxes);
+        if (document.getElementById('add_task_input').style.visibility === 'hidden') {
+            allTasks.set(dateValue, dayTaskesAndCheckboxes);
 
-        clearData();
+            clearData();
 
-        currentDate = new Date(document.getElementById('date_selector').value);
-        
-        init();
+            currentDate = new Date(document.getElementById('date_selector').value);
+            
+            init();
+        }
     })
     
     
@@ -309,7 +319,7 @@
 
         document.addEventListener('click', function(e) {
             let taskInput = document.getElementById('add_task_input');
-            if (taskInput.style.visibility = 'visible') {
+            if (taskInput.style.visibility === 'visible') {
 
                 let inputBoundaries = e.composedPath().includes(taskInput);
                 let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
@@ -318,7 +328,7 @@
                     hideElement(taskInput);
                 } else if ((taskInput.value.trim()) && (!inputBoundaries)){
                     alert("You didn't save the task");
-
+                    taskInput.focus();
                 }
             }
         })
