@@ -135,6 +135,20 @@
         width: 150px;
         background-color: rgb(255, 255, 255);
     }
+    .delete_btn {
+        width:20px;
+        height: 20px;
+        margin: auto;
+        margin-right: 10px;
+        background-image: url("img/cross.png");
+        background-color: inherit;
+        opacity: 0.7;
+        background-position: center;
+        background-size: 13px;
+        background-repeat: no-repeat;
+        visibility: hidden;
+        border: 1px solid rgb(0, 0, 0);
+    }
 </style>
 
 <script>
@@ -147,6 +161,7 @@
     init();
 
     function init() {
+        clearData();
         update();
 
         for(let task of dayTaskesAndCheckboxes) 
@@ -210,11 +225,8 @@
 
             recordLocalStorage();
 
-            clearData();
-
             currentDate.setDate(currentDate.getDate() - 1);
             
-
             init();
 
         }
@@ -225,8 +237,6 @@
         if (window.getComputedStyle(taskInput).visibility === 'hidden') {
 
             recordLocalStorage();
-
-            clearData();
 
             currentDate.setDate(currentDate.getDate() + 1);
             
@@ -241,8 +251,6 @@
 
             recordLocalStorage();
 
-            clearData();
-            
             init();
         }
     })
@@ -257,6 +265,9 @@
         li.setAttribute('id', `task_${index}`);
         let label = document.createElement("label");
         label.innerHTML = task;
+        let button = document.createElement("button");
+        button.setAttribute('class', 'delete_btn'); 
+        button.setAttribute('id', `button_${index}`); 
         let input = document.createElement("input");
         input.setAttribute('type', 'checkbox');
         input.setAttribute('id', `cbox_${index}`); 
@@ -265,16 +276,17 @@
             label.style.textDecoration = 'line-through';
         }
         li.append(label); 
+        li.append(button); 
         li.append(input);
 
         document.getElementById('list').append(li);
 
-        changeCheckboxListener(index);
+        addChangeCheckboxListener(index);
+        addDeleteButtonListener(index);
     }
 
 
-
-    function changeCheckboxListener(index) {
+    function addChangeCheckboxListener(index) {
         let checkbox = document.getElementById(`cbox_${index}`); 
 
         checkbox.addEventListener('click', function(e) {
@@ -288,6 +300,29 @@
             task.checked = checkbox.checked;
             e.stopPropagation();
         });
+    }
+
+
+    function addDeleteButtonListener(index) {
+        let li = document.getElementById(`task_${index}`); 
+        let btn = document.getElementById(`button_${index}`);
+
+        li.addEventListener('mouseover', function() {
+            btn.style.visibility = 'visible';
+        });
+        li.addEventListener('mouseout', function() {
+            btn.style.visibility = 'hidden';
+        });
+
+        btn.addEventListener('click', function() {
+            let taskText = li.querySelector('label').innerHTML;
+
+            dayTaskesAndCheckboxes = dayTaskesAndCheckboxes.filter(function(wholeTask) {return wholeTask.task != `${taskText}`});
+
+            recordLocalStorage();
+
+            init();
+        })
     }
 
 
@@ -344,23 +379,7 @@
         })
 
         window.addEventListener('beforeunload', function (e) {
-            let taskInput = document.getElementById('add_task_input');
-            if (window.getComputedStyle(taskInput).visibility === 'hidden') {
-
                 recordLocalStorage();
-
-                clearData();
-
-                currentDate.setDate(currentDate.getDate() + 1);
-                
-                init();
-
-            } /*else {
-                if (!confirm("You didn't save the task. Are you sure?")) {
-
-                }
-                
-            }*/
         });
 
 </script>
