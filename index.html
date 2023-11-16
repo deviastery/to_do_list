@@ -317,7 +317,7 @@
         btn.addEventListener('click', function() {
             let taskText = li.querySelector('label').innerHTML;
 
-            dayTaskesAndCheckboxes = dayTaskesAndCheckboxes.filter(function(wholeTask) {return wholeTask.task != `${taskText}`});
+            dayTaskesAndCheckboxes = dayTaskesAndCheckboxes.filter((wholeTask) => wholeTask.task != `${taskText}`);
 
             recordLocalStorage();
 
