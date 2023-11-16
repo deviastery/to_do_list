@@ -97,9 +97,10 @@
         max-height: 420px;
         width: 380px;
         background-color: inherit;
-        margin: 10px auto 0;
+        margin: 10px 0px 0;
         overflow-y: auto;
         overflow-x: hidden;
+        padding-left: 10px;
     }
     li {
         background-color: inherit;
@@ -110,7 +111,6 @@
         width: 350px;
         word-wrap: break-word;
         padding: 1px 5px;
-        margin: auto;
     }
     li:hover {
         background-color: rgb(205, 205, 205);
@@ -122,13 +122,12 @@
     #add_task_input {
         width: 350px;
         height: 24px;
-        margin: 0 auto 10px;
+        margin: 0 0 10px 14px;
         background-color: inherit;
         border: 1px solid rgb(0, 0, 0);
         visibility: hidden;
         font-size: 20px;
         font-family: Arial, Helvetica, sans-serif;
-        margin-top: 0px;
     }
     #add_btn {
         margin-top: 15px;
@@ -308,7 +307,7 @@
 
                 if (!task){
                     alert("The empty task");
-                    taskInput.value = '';
+                    hideElement(taskInput);
                     return;
                 }
 
