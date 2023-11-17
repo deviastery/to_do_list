@@ -173,50 +173,50 @@
         formatDate = currentDate.toISOString().slice(0, 10);
         document.getElementById('date_selector').value = formatDate;
 
-    }
+    } // set date
 
     function setDay() {
         let formatDay = currentDate.toString().slice(0, 3);
         document.getElementById('week_day').textContent = formatDay;
 
-    }
+    } // set day of week
 
     function getFromLocalStorage() {
         if (localStorage.getItem(`${formatDate}`)) {
             dayTaskesAndCheckboxes = JSON.parse(localStorage.getItem(`${formatDate}`));
         }
-    }
+    } // get data from localStorage
  
     function update() {
         setDate();
         setDay();
         getFromLocalStorage();
-    }
+    } // update date and localStorage
 
     function clearData() {
         dayTaskesAndCheckboxes = [];
         index = 0;
         document.querySelectorAll('li').forEach(elem => elem.remove());
-    }
+    } // clear data and interface
 
     function showElement(elem) {
         elem.style.visibility = 'visible';
         elem.style.height = '24px';
         elem.focus();
-    }
+    } // show the element
 
     function hideElement(elem) {
         elem.style.visibility = 'hidden';
         elem.style.height = '0px';
         elem.value = '';
-    }
+    } // hide rhe element
 
     function recordLocalStorage() {
         if (localStorage.getItem(`${formatDate}`)) {
             localStorage.removeItem(`${formatDate}`)
         }
         localStorage.setItem(`${formatDate}`, JSON.stringify(dayTaskesAndCheckboxes));
-    }
+    } // record data to localStorage
 
 
     document.getElementById('decrement_btn').addEventListener('click', function() {
@@ -228,9 +228,8 @@
             currentDate.setDate(currentDate.getDate() - 1);
             
             init();
-
         }
-    })
+    }) // increase the day
     
     document.getElementById('increment_btn').addEventListener('click', function() {
         let taskInput = document.getElementById('add_task_input');
@@ -241,9 +240,8 @@
             currentDate.setDate(currentDate.getDate() + 1);
             
             init();
-
         }
-    })
+    }) // reduce the day
     
     document.getElementById('date_selector').addEventListener('change', function() {
         let taskInput = document.getElementById('add_task_input');
@@ -253,7 +251,7 @@
 
             init();
         }
-    })
+    }) // choose the day
     
     
     function createLiElement(wholeTask) {
@@ -263,18 +261,23 @@
 
         let li = document.createElement("li");
         li.setAttribute('id', `task_${index}`);
+
         let label = document.createElement("label");
         label.innerHTML = task;
+
         let button = document.createElement("button");
         button.setAttribute('class', 'delete_btn'); 
         button.setAttribute('id', `button_${index}`); 
+
         let input = document.createElement("input");
         input.setAttribute('type', 'checkbox');
         input.setAttribute('id', `cbox_${index}`); 
+
         if (wholeTask.checked) {
             input.setAttribute('checked', 'true');
             label.style.textDecoration = 'line-through';
         }
+
         li.append(label); 
         li.append(button); 
         li.append(input);
@@ -283,7 +286,7 @@
 
         addChangeCheckboxListener(index);
         addDeleteButtonListener(index);
-    }
+    } // create the new element
 
 
     function addChangeCheckboxListener(index) {
@@ -293,14 +296,16 @@
             let parentId = checkbox.parentElement.getAttribute('id');
             let liElement = document.getElementById(parentId);
             let label = liElement.querySelector('label');
-            let taskText = label.textContent;
-            let task = (dayTaskesAndCheckboxes).find(wholeTask => wholeTask.task === taskText);
+
+            let wholeTask = dayTaskesAndCheckboxes[index-1];
 
             label.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
-            task.checked = checkbox.checked;
+            wholeTask.checked = checkbox.checked;
+
+            recordLocalStorage();
             e.stopPropagation();
         });
-    }
+    } //  add changer the changebox eventListener
 
 
     function addDeleteButtonListener(index) {
@@ -314,16 +319,22 @@
             btn.style.visibility = 'hidden';
         });
 
-        btn.addEventListener('click', function() {
-            let taskText = li.querySelector('label').innerHTML;
+        btn.addEventListener('mousedown', function() {
+            btn.style.backgroundColor = 'rgb(170, 170, 170)';
+        })
+        btn.addEventListener('mouseup', function() {
+            btn.style.backgroundColor = 'rgb(250, 250, 250)';
 
-            dayTaskesAndCheckboxes = dayTaskesAndCheckboxes.filter((wholeTask) => wholeTask.task != `${taskText}`);
-
+            dayTaskesAndCheckboxes.splice(index-1, 1);
+///////////////////////////////
+            console.log(dayTaskesAndCheckboxes)
+///////////////////////////////
             recordLocalStorage();
 
             init();
         })
-    }
+        
+    } // add delete button eventListener
 
 
     document.getElementById('add_btn').addEventListener('click', function() {        
@@ -332,54 +343,56 @@
 
         document.getElementById('list').scrollTo(0, document.getElementById('list').scrollHeight);
 
-    }) // add EventListener
+    }) // add add button eventListener
+
 
     document.addEventListener('keyup', function(e) {
         let taskInput = document.getElementById('add_task_input');
-            if ((e.code === 'Enter') && (taskInput.style.visibility = 'visible')) {
-                
-                let task = taskInput.value.trim();
+        if ((e.code === 'Enter') && (taskInput.style.visibility = 'visible')) {
+            
+            let task = taskInput.value.trim();
 
-                if (!task){
-                    alert("The empty task");
-                    hideElement(taskInput);
-                    return;
-                }
-
+            if (!task){
+                alert("The empty task");
                 hideElement(taskInput);
-
-                taskAndCheckbox = {"task": task,
-                                   "checked": false};
-
-                dayTaskesAndCheckboxes.push(taskAndCheckbox);
-
-                if (task.length > 70) {
-                    alert("The task is too long");
-                    return;
-                }
-
-                createLiElement(taskAndCheckbox);
+                return;
             }
-        })
 
-        document.addEventListener('click', function(e) {
-            let taskInput = document.getElementById('add_task_input');
-            if (taskInput.style.visibility === 'visible') {
+            hideElement(taskInput);
 
-                let inputBoundaries = e.composedPath().includes(taskInput);
-                let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
+            taskAndCheckbox = {"task": task,
+                               "checked": false};
 
-                if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
-                    hideElement(taskInput);
-                } else if ((taskInput.value.trim()) && (!inputBoundaries)){
-                    alert("You didn't save the task");
-                    taskInput.focus();
-                }
+            dayTaskesAndCheckboxes.push(taskAndCheckbox);
+
+            if (task.length > 70) {
+                alert("The task is too long");
+                return;
             }
-        })
 
-        window.addEventListener('beforeunload', function (e) {
-                recordLocalStorage();
-        });
+            createLiElement(taskAndCheckbox);
+        }
+    })  // add saver task
+
+
+    document.addEventListener('click', function(e) {
+        let taskInput = document.getElementById('add_task_input');
+        if (taskInput.style.visibility === 'visible') {
+
+            let inputBoundaries = e.composedPath().includes(taskInput);
+            let buttonBoundaries = e.composedPath().includes(document.getElementById('add_btn'));
+
+            if ((!inputBoundaries) && (!buttonBoundaries) && (!taskInput.value.trim())) {
+                hideElement(taskInput);
+            } else if ((taskInput.value.trim()) && (!inputBoundaries)){
+                alert("You didn't save the task");
+                taskInput.focus();
+            }
+        }
+    }) // add error eventListener
+
+    window.addEventListener('beforeunload', function (e) {
+            recordLocalStorage();
+    }) // add reload eventListener
 
 </script>
